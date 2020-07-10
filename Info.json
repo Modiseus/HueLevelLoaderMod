@@ -1,0 +1,7 @@
+﻿{
+  "Id": "LevelLoader",
+  "DisplayName": "Level Loader",
+  "Author": "Modiseus",
+  "Version": "1.0.0",
+  "EntryMethod": "LevelLoader.Main.Load"
+}
