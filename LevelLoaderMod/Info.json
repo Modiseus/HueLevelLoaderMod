@@ -3,5 +3,6 @@
   "DisplayName": "Level Loader Mod",
   "Author": "Modiseus",
   "Version": "1.0.0",
-  "EntryMethod": "LevelLoaderMod.Main.Load"
+  "EntryMethod": "LevelLoaderMod.Main.Load",
+  "HomePage": "https://github.com/Modiseus/HueLevelLoaderMod"
 }
