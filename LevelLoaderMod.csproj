@@ -7,8 +7,8 @@
     <ProjectGuid>{A32D5747-7795-49B2-A8EA-47F51710EDA6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LevelLoader</RootNamespace>
-    <AssemblyName>LevelLoader</AssemblyName>
+    <RootNamespace>LevelLoaderMod</RootNamespace>
+    <AssemblyName>LevelLoaderMod</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -59,7 +59,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>XCOPY /Y /R "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\Hue\Mods\$(ProjectName)\"
-XCOPY /Y /R "$(ProjectDir)Info.json" "C:\Program Files (x86)\Steam\steamapps\common\Hue\Mods\$(ProjectName)\"</PostBuildEvent>
+    <PostBuildEvent>XCOPY /Y /R "$(TargetPath)" "$(ProjectDir)$(ProjectName)\"
+XCOPY /Y /R "$(ProjectDir)$(ProjectName)" "C:\Program Files (x86)\Steam\steamapps\common\Hue\Mods\$(ProjectName)\"
+</PostBuildEvent>
   </PropertyGroup>
 </Project>
