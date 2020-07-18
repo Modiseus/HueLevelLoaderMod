@@ -172,6 +172,12 @@ namespace LevelLoaderMod
             var levelList = GameManager.instance.GetLevelNames();
             foreach (string name in levelList)
             {
+                //This level crashes the game because it does not exist.
+                if(name == "LocalisationTestScene")
+                {
+                    continue;
+                }
+
 
                 if (GUILayout.Button(name))
                 {
