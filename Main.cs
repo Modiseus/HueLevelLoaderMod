@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InControl;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,12 +17,17 @@ namespace LevelLoaderMod
         public static void Load(UnityModManager.ModEntry modEntry)
         {
             modEntry.OnFixedGUI = FixedGUI;
+            modEntry.OnToggle = OnToggle;
         }
 
+        private static bool OnToggle(UnityModManager.ModEntry modEntry, bool toggle)
+        {
+            return true;
+        }
 
         private static void FixedGUI(UnityModManager.ModEntry modEntry)
         {
-            
+
 
             GUILayout.BeginVertical();
 
@@ -34,7 +40,7 @@ namespace LevelLoaderMod
             style.normal.textColor = Color.white;
 
             GUILayout.Label("Level Loader Mod Enabled", style);
-
+            
             GameManager gm = GameManager.instance;
             if (gm == null)
             {
@@ -42,12 +48,13 @@ namespace LevelLoaderMod
                 return;
             }
             PlayerNew player = gm.Player;
-            if(player == null)
+            if (player == null)
             {
                 GUILayout.EndVertical();
                 return;
             }
 
+            GUILayout.Label("Current Level: " + Singleton<SaveLoadManager>.Instance.CurrentLevel, style);
 
             GUILayout.BeginHorizontal();
 
@@ -55,12 +62,14 @@ namespace LevelLoaderMod
 
             GUILayout.BeginVertical();
 
-            if (GUILayout.Button("Unlock Colors"))
+            if (GUILayout.Button("Unlock All Colors"))
             {
                 UnlockColors();
             }
 
-            if (GUILayout.Button("Unlock Map"))
+            GUIColors();
+
+            if (GUILayout.Button("Unlock Map Regions"))
             {
                 UnlockMap();
             }
@@ -70,7 +79,7 @@ namespace LevelLoaderMod
                 UnlockEvents();
             }
 
-            if(GUILayout.Button("Complete Tutorials"))
+            if (GUILayout.Button("Complete Tutorials"))
             {
                 CompleteTutorials();
             }
@@ -93,6 +102,28 @@ namespace LevelLoaderMod
 
 
         }
+
+        private static void GUIColors()
+        {
+
+            ColorToggle(HueColour.HueColorNames.Aqua);
+            ColorToggle(HueColour.HueColorNames.Blue);
+            ColorToggle(HueColour.HueColorNames.Lime);
+            ColorToggle(HueColour.HueColorNames.Orange);
+            ColorToggle(HueColour.HueColorNames.Pink);
+            ColorToggle(HueColour.HueColorNames.Purple);
+            ColorToggle(HueColour.HueColorNames.Red);
+            ColorToggle(HueColour.HueColorNames.Yellow);
+
+        }
+
+        private static void ColorToggle(HueColour.HueColorNames color)
+        {
+
+            SaveLoadManager slm = Singleton<SaveLoadManager>.Instance;
+            slm.SetColourUnlocked(color, GUILayout.Toggle(slm.IsColourUnlocked(color), color.ToString()));
+        }
+
 
         private static void UnlockColors()
         {
@@ -154,7 +185,7 @@ namespace LevelLoaderMod
             Singleton<SaveLoadManager>.Instance.CompleteTutorial(TutorialType.EnterDoor);
             Singleton<SaveLoadManager>.Instance.CompleteTutorial(TutorialType.JumpDown);
             Singleton<SaveLoadManager>.Instance.CompleteTutorial(TutorialType.Pull);
-            Singleton<SaveLoadManager>.Instance.CompleteTutorial(TutorialType.Talk);                       
+            Singleton<SaveLoadManager>.Instance.CompleteTutorial(TutorialType.Talk);
         }
 
         private static void LoadLevel(String sceneName)
@@ -167,13 +198,14 @@ namespace LevelLoaderMod
 
         private static void GUILevels(int width, int height)
         {
+
             scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Width(width), GUILayout.Height(height));
 
             var levelList = GameManager.instance.GetLevelNames();
             foreach (string name in levelList)
             {
                 //This level crashes the game because it does not exist.
-                if(name == "LocalisationTestScene")
+                if (name == "LocalisationTestScene")
                 {
                     continue;
                 }
