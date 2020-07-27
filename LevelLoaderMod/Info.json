@@ -2,7 +2,7 @@
   "Id": "LevelLoaderMod",
   "DisplayName": "Level Loader Mod",
   "Author": "Modiseus",
-  "Version": "1.0.1",
+  "Version": "1.1.0",
   "EntryMethod": "LevelLoaderMod.Main.Load",
   "HomePage": "https://github.com/Modiseus/HueLevelLoaderMod"
 }
