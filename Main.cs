@@ -13,6 +13,7 @@ namespace LevelLoaderMod
 
         private static Vector2 scrollPosition;
         private static String wheelOffsetString = "0.0";
+        private static int levelSorting = 0;
 
 
         public static void Load(UnityModManager.ModEntry modEntry)
@@ -29,18 +30,11 @@ namespace LevelLoaderMod
         private static void FixedGUI(UnityModManager.ModEntry modEntry)
         {
 
+            GUIStyle style = CreateStyle(new GUIStyle(), Color.black, Color.white);
 
-            GUILayout.BeginVertical();
+            GUILayout.BeginVertical(style);
 
-            Texture2D texture = new Texture2D(1, 1);
-            texture.SetPixel(0, 0, Color.black);
-            texture.Apply();
-            GUIStyle style = new GUIStyle();
-
-            style.normal.background = texture;
-            style.normal.textColor = Color.white;
-
-            GUILayout.Label("Level Loader Mod Enabled", style);
+            GUILayout.Label("Level Loader Mod Enabled");
 
             GameManager gm = GameManager.instance;
             if (gm == null)
@@ -55,13 +49,14 @@ namespace LevelLoaderMod
                 return;
             }
 
-            GUILayout.Label("Current Level: " + Singleton<SaveLoadManager>.Instance.CurrentLevel, style);
-
             GUILayout.BeginHorizontal();
 
             GUILevels(250, 500);
 
+
             GUILayout.BeginVertical();
+
+            GUILayout.Label("Unlocks");
 
             if (GUILayout.Button("Unlock All Colors"))
             {
@@ -138,15 +133,14 @@ namespace LevelLoaderMod
 
         private static void GUIColors()
         {
-
             ColorToggle(HueColour.HueColorNames.Aqua);
             ColorToggle(HueColour.HueColorNames.Blue);
-            ColorToggle(HueColour.HueColorNames.Lime);
-            ColorToggle(HueColour.HueColorNames.Orange);
-            ColorToggle(HueColour.HueColorNames.Pink);
             ColorToggle(HueColour.HueColorNames.Purple);
+            ColorToggle(HueColour.HueColorNames.Pink);
             ColorToggle(HueColour.HueColorNames.Red);
+            ColorToggle(HueColour.HueColorNames.Orange);
             ColorToggle(HueColour.HueColorNames.Yellow);
+            ColorToggle(HueColour.HueColorNames.Lime);
 
         }
 
@@ -154,7 +148,15 @@ namespace LevelLoaderMod
         {
 
             SaveLoadManager slm = Singleton<SaveLoadManager>.Instance;
-            slm.SetColourUnlocked(color, GUILayout.Toggle(slm.IsColourUnlocked(color), color.ToString()));
+
+            Color textColor = HueColour.HueColourValue(color);
+
+            GUIStyle style = GUI.skin.toggle;
+            style.normal.textColor = textColor;
+            style.onNormal.textColor = textColor;
+
+            bool unlocked = GUILayout.Toggle(slm.IsColourUnlocked(color), color.ToString(),style);
+            slm.SetColourUnlocked(color, unlocked);
         }
 
 
@@ -231,28 +233,319 @@ namespace LevelLoaderMod
 
         private static void GUILevels(int width, int height)
         {
+            GUILayout.BeginVertical();
+
+            GUILayout.Label("Levels");
+
+            string[] sortingOptions = new string[] { "Regions", "Alphabetical" };
+            int xCount = sortingOptions.Length;
+
+            levelSorting = GUILayout.SelectionGrid(levelSorting, sortingOptions, xCount);
 
             scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Width(width), GUILayout.Height(height));
 
-            var levelList = GameManager.instance.GetLevelNames();
-            foreach (string name in levelList)
+            switch (levelSorting)
             {
-                //This level crashes the game because it does not exist.
-                if (name == "LocalisationTestScene")
-                {
-                    continue;
-                }
-
-
-                if (GUILayout.Button(name))
-                {
-                    LoadLevel(name);
-                }
-
+                case 0:
+                    AddLevelsByRegion();
+                    break;
+                case 1:
+                    AddLevelsAlphabetically();
+                    break;
+                default:
+                    AddLevelsByRegion();
+                    break;
             }
+
 
             GUILayout.EndScrollView();
 
+            GUILayout.Label("Current Level: " + Singleton<SaveLoadManager>.Instance.CurrentLevel);
+
+            GUILayout.EndVertical();
+
+        }
+
+        private static GUIStyle CreateStyle(GUIStyle style,Color backgroundColor, Color textColor)
+        {
+            Texture2D texture = new Texture2D(1, 1);
+            texture.SetPixel(0, 0, backgroundColor);
+            texture.Apply();
+
+            style.normal.background = texture;
+            style.normal.textColor = textColor;
+            return style;
+        }
+
+        private static void AddLevelsByRegion()
+        {
+            GUILayout.Label("Region - Village");
+            AddLevelButton("IntroDream");
+            AddLevelButton("Village");
+            AddLevelButton("Lighthouse");
+            AddLevelButton("OldLadyHouse");
+            AddLevelButton("CycleHouse");
+            AddLevelButton("ThinHouse");
+
+            GUILayout.Label("Region - Caves");
+            AddLevelButton("CaveMinerArea");
+
+            GUILayout.Label("Region - Water");
+            AddLevelButton("WaterEntrance");
+            AddLevelButton("Waterfall");
+            AddLevelButton("DropThroughColour");
+            AddLevelButton("PullTute");
+            AddLevelButton("SpikeTute");
+            AddLevelButton("JumpColour");
+            AddLevelButton("BoulderTutorialNew");
+            AddLevelButton("BoulderDropChase");
+            AddLevelButton("BoulderTrap");
+            AddLevelButton("PurpleFragmentRoom");
+            AddLevelButton("PostPurpleCorridor");
+            AddLevelButton("AlternatingColourSwitch");
+            AddLevelButton("FallThroughColours");
+            AddLevelButton("AlternatingColourJumps");
+            AddLevelButton("ClimbUpColours");
+            AddLevelButton("OrangeFragmentRoom");
+            AddLevelButton("WaterExit");
+
+            GUILayout.Label("Region - Fire");
+            AddLevelButton("FireIntro");
+            AddLevelButton("PuzzleSequence");
+            AddLevelButton("KeyTutorial");
+            AddLevelButton("JumpAlign");
+            AddLevelButton("BoulderSwitchChase");
+            AddLevelButton("HueDunnit");
+            AddLevelButton("SkeletonRoom");
+            AddLevelButton("AlternatingBoulders");
+            AddLevelButton("PinkFragmentRoom");
+            AddLevelButton("PostPinkCorridor");
+            AddLevelButton("BoxSlideMaze");
+            AddLevelButton("BrickMaze");
+            AddLevelButton("NarrowCorridorCrates");
+            AddLevelButton("BlackBoxDecoy");
+            AddLevelButton("CrushOnStart");
+            AddLevelButton("CrumblingRockJump");
+            AddLevelButton("SlideAcrossTheGap");
+            AddLevelButton("RedFragmentRoom");
+            AddLevelButton("PostRedCorridor");
+
+            GUILayout.Label("Region - Temple"); AddLevelButton("TempleIntro");
+            AddLevelButton("CrateSequence");
+            AddLevelButton("BoulderPressurepads");
+            AddLevelButton("PressurePadSlide");
+            AddLevelButton("ThwompTutorial");
+            AddLevelButton("ThwompTrigger");
+            AddLevelButton("ThwompClimb");
+            AddLevelButton("CrateThwompRetrieve");
+            AddLevelButton("BlueFragmentRoom");
+            AddLevelButton("PostBlueCorridor");
+            AddLevelButton("LongCratePressure");
+            AddLevelButton("BalloonThwompJump");
+            AddLevelButton("BalloonSwitchJump");
+            AddLevelButton("BalloonDecoy");
+            AddLevelButton("BalloonMaze");
+            AddLevelButton("ThwompRunner");
+            AddLevelButton("YellowFragmentRoom");
+            AddLevelButton("PostYellowCorridor");
+
+            GUILayout.Label("Region - Tech"); AddLevelButton("TechHub");
+            AddLevelButton("TechIntro");
+            AddLevelButton("LaserTutorial");
+            AddLevelButton("LaserJumpSwitch");
+            AddLevelButton("LaserMovingSwitch");
+            AddLevelButton("LaserCrateBlock");
+            AddLevelButton("LaserClimb");
+            AddLevelButton("PipePush");
+            AddLevelButton("LaserPlatformMadness");
+            AddLevelButton("LaserPlatformMadness");
+            AddLevelButton("LaserActivatedTutorial");
+            AddLevelButton("LaserDoors");
+            AddLevelButton("LaserBalloonMaze");
+            AddLevelButton("ThwompLaserRunner");
+            AddLevelButton("LimeFragmentRoom");
+            AddLevelButton("PostLimeCorridor");
+            AddLevelButton("LeverTutorial");
+            AddLevelButton("LaserHeights");
+            AddLevelButton("PlatformBlockLasers");
+            AddLevelButton("LeverMadness");
+            AddLevelButton("TechToLighthouse");
+
+            GUILayout.Label("Region - Island");
+            AddLevelButton("IslandPort");
+            AddLevelButton("MountainsEntrance");
+            AddLevelButton("MountainsBounceIntro");
+            AddLevelButton("MountainsPostBounceIntro");
+            AddLevelButton("BounceToDeath");
+            AddLevelButton("MountainsBounceKeyRetrieve");
+            AddLevelButton("BounceSpikePit");
+            AddLevelButton("MountainsZigZag");
+            AddLevelButton("BounceThwompDash");
+            AddLevelButton("MountainsBounceLaserIntro");
+            AddLevelButton("BounceCrateDrag");
+            AddLevelButton("BouncePit");
+            AddLevelButton("BounceConveyer");
+            AddLevelButton("LaserBounceChange");
+
+            GUILayout.Label("Region - University");
+            AddLevelButton("UniversityOutside");
+            AddLevelButton("UniversityLobby");
+            AddLevelButton("BasementGoo");
+            AddLevelButton("UniLetterCorridor");
+            AddLevelButton("GooBalloonPressure");
+            AddLevelButton("GooPressure");
+            AddLevelButton("Courtyard");
+            AddLevelButton("ConveyerGoo");
+            AddLevelButton("GooBalloonDip");
+            AddLevelButton("TrophyRoom");
+            AddLevelButton("ThwompDoubleLaser");
+            AddLevelButton("UniGooStairs");
+            AddLevelButton("Courtyard");
+            AddLevelButton("BounceGooIntro");
+            AddLevelButton("GooBalloonCrates");
+            AddLevelButton("MovingGoo");
+            AddLevelButton("Courtyard");
+            AddLevelButton("ThwompGoo");
+            AddLevelButton("HiddenDoorCorridor");
+            AddLevelButton("SecretRoom");
+            AddLevelButton("UniSlide");
+            AddLevelButton("UniGooStairsDown");
+            AddLevelButton("ThwompGooClimb");
+            AddLevelButton("UniRooftop");
+            AddLevelButton("MumRoom");
+            AddLevelButton("OutroDream");
+        }
+
+        private static void AddLevelsAlphabetically()
+        {
+            AddLevelButton("AlternatingBoulders");
+            AddLevelButton("AlternatingColourJumps02");
+            AddLevelButton("AlternatingColourSwitch");
+            AddLevelButton("BalloonDecoy");
+            AddLevelButton("BalloonMaze");
+            AddLevelButton("BalloonSwitchJump");
+            AddLevelButton("BalloonThwompJump");
+            AddLevelButton("BasementGoo");
+            AddLevelButton("BlackBoxDecoy");
+            AddLevelButton("BlueFragmentRoom");
+            AddLevelButton("BoulderDropChase02");
+            AddLevelButton("BoulderPressurepads");
+            AddLevelButton("BoulderSwitchChase");
+            AddLevelButton("BoulderTrap02");
+            AddLevelButton("BoulderTutorialNew01");
+            AddLevelButton("BounceConveyer");
+            AddLevelButton("BounceCrateDrag");
+            AddLevelButton("BounceGooIntro");
+            AddLevelButton("BouncePit");
+            AddLevelButton("BounceSpikePit");
+            AddLevelButton("BounceThwompDash");
+            AddLevelButton("BounceToDeath");
+            AddLevelButton("BoxSlideMaze");
+            AddLevelButton("BrickMaze");
+            AddLevelButton("CaveMinerArea");
+            AddLevelButton("ClimbUpColours02");
+            AddLevelButton("ConveyerGoo");
+            AddLevelButton("Courtyard1");
+            AddLevelButton("Courtyard2");
+            AddLevelButton("Courtyard3");
+            AddLevelButton("CrateSequence");
+            AddLevelButton("CrateThwompRetrieve");
+            AddLevelButton("CrumblingRockJump");
+            AddLevelButton("CrushOnStart");
+            AddLevelButton("CycleHouse");
+            AddLevelButton("DropThroughColour");
+            AddLevelButton("FallThroughColours");
+            AddLevelButton("FireIntro");
+            AddLevelButton("GooBalloonCrates");
+            AddLevelButton("GooBalloonDip");
+            AddLevelButton("GooBalloonPressure");
+            AddLevelButton("GooPressure");
+            AddLevelButton("HiddenDoorCorridor");
+            AddLevelButton("HueDunnit");
+            AddLevelButton("IslandPort");
+            AddLevelButton("JumpAlign");
+            AddLevelButton("JumpColour");
+            AddLevelButton("KeyTutorial");
+            AddLevelButton("LaserActivatedTutorial");
+            AddLevelButton("LaserBalloonMaze");
+            AddLevelButton("LaserBounceChange");
+            AddLevelButton("LaserClimb");
+            AddLevelButton("LaserCrateBlock");
+            AddLevelButton("LaserDoors");
+            AddLevelButton("LaserHeights");
+            AddLevelButton("LaserJumpSwitch");
+            AddLevelButton("LaserMovingSwitch");
+            AddLevelButton("LaserPlatformMadness1");
+            AddLevelButton("LaserPlatformMadness2");
+            AddLevelButton("LaserTutorial");
+            AddLevelButton("LeverMadness");
+            AddLevelButton("LeverTutorial");
+            AddLevelButton("Lighthouse");
+            AddLevelButton("LimeFragmentRoom");
+            AddLevelButton("LongCratePressure");
+            AddLevelButton("MountainsBounceIntro");
+            AddLevelButton("MountainsBounceKeyRetrieve");
+            AddLevelButton("MountainsBounceLaserIntro");
+            AddLevelButton("MountainsEntrance");
+            AddLevelButton("MountainsPostBounceIntro");
+            AddLevelButton("MountainsZigZag");
+            AddLevelButton("MovingGoo");
+            AddLevelButton("MumRoom");
+            AddLevelButton("NarrowCorridorCrates");
+            AddLevelButton("OldLadyHouse");
+            AddLevelButton("OrangeFragmentRoom");
+            AddLevelButton("PinkFragmentRoom");
+            AddLevelButton("PipePush");
+            AddLevelButton("PlatformBlockLasers");
+            AddLevelButton("PostBlueCorridor");
+            AddLevelButton("PostLimeCorridor");
+            AddLevelButton("PostPinkCorridor");
+            AddLevelButton("PostPurpleCorridor");
+            AddLevelButton("PostRedCorridor");
+            AddLevelButton("PostYellowCorridor");
+            AddLevelButton("PressurePadSlide");
+            AddLevelButton("PullTute02");
+            AddLevelButton("PurpleFragmentRoom");
+            AddLevelButton("PuzzleSequence");
+            AddLevelButton("RedFragmentRoom");
+            AddLevelButton("SecretRoom");
+            AddLevelButton("SkeletonRoom");
+            AddLevelButton("SlideAcrossTheGap");
+            AddLevelButton("SpikeTute03");
+            AddLevelButton("TechHub");
+            AddLevelButton("TechIntro");
+            AddLevelButton("TechToLighthouse");
+            AddLevelButton("TempleIntro");
+            AddLevelButton("ThinHouse");
+            AddLevelButton("ThwompClimb");
+            AddLevelButton("ThwompDoubleLaser");
+            AddLevelButton("ThwompGoo");
+            AddLevelButton("ThwompGooClimb");
+            AddLevelButton("ThwompLaserRunner");
+            AddLevelButton("ThwompRunner");
+            AddLevelButton("ThwompTrigger");
+            AddLevelButton("ThwompTutorial");
+            AddLevelButton("TrophyRoom");
+            AddLevelButton("UniGooStairs");
+            AddLevelButton("UniGooStairsDown");
+            AddLevelButton("UniLetterCorridor");
+            AddLevelButton("UniRooftop");
+            AddLevelButton("UniSlide");
+            AddLevelButton("UniversityLobby");
+            AddLevelButton("UniversityOutside");
+            AddLevelButton("Village");
+            AddLevelButton("WaterEntrance");
+            AddLevelButton("WaterExit");
+            AddLevelButton("Waterfall");
+            AddLevelButton("YellowFragmentRoom");
+        }
+
+        private static void AddLevelButton(string name)
+        {
+            if (GUILayout.Button(name))
+            {
+                LoadLevel(name);
+            }
         }
 
 
