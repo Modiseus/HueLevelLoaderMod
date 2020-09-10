@@ -12,7 +12,7 @@ namespace LevelLoaderMod
     {
 
         private static Vector2 scrollPosition;
-        private static String wheelOffsetString = "0.0";
+        private static String wheelOffsetString = "";
         private static int levelSorting = 0;
 
 
@@ -29,8 +29,15 @@ namespace LevelLoaderMod
 
         private static void FixedGUI(UnityModManager.ModEntry modEntry)
         {
+            GUIStyle style = new GUIStyle();
+            Texture2D texture = new Texture2D(1, 1);
+            Color background = Color.black;
+            background.a = 0.7f;
+            texture.SetPixel(0, 0, background);
+            texture.Apply();
 
-            GUIStyle style = CreateStyle(new GUIStyle(), Color.black, Color.white);
+            style.normal.background = texture;
+            style.normal.textColor = Color.white;
 
             GUILayout.BeginVertical(style);
 
@@ -98,6 +105,7 @@ namespace LevelLoaderMod
             if (GUILayout.Button("Move"))
             {
                 SetWheelOffset();
+                wheelOffsetString = "";
             }
 
             GUILayout.EndHorizontal();
@@ -151,7 +159,7 @@ namespace LevelLoaderMod
 
             Color textColor = HueColour.HueColourValue(color);
 
-            GUIStyle style = GUI.skin.toggle;
+            GUIStyle style = new GUIStyle(GUI.skin.toggle);
             style.normal.textColor = textColor;
             style.onNormal.textColor = textColor;
 
@@ -266,16 +274,6 @@ namespace LevelLoaderMod
 
         }
 
-        private static GUIStyle CreateStyle(GUIStyle style,Color backgroundColor, Color textColor)
-        {
-            Texture2D texture = new Texture2D(1, 1);
-            texture.SetPixel(0, 0, backgroundColor);
-            texture.Apply();
-
-            style.normal.background = texture;
-            style.normal.textColor = textColor;
-            return style;
-        }
 
         private static void AddLevelsByRegion()
         {
@@ -294,19 +292,19 @@ namespace LevelLoaderMod
             AddLevelButton("WaterEntrance");
             AddLevelButton("Waterfall");
             AddLevelButton("DropThroughColour");
-            AddLevelButton("PullTute");
-            AddLevelButton("SpikeTute");
+            AddLevelButton("PullTute02");
+            AddLevelButton("SpikeTute03");
             AddLevelButton("JumpColour");
-            AddLevelButton("BoulderTutorialNew");
-            AddLevelButton("BoulderDropChase");
-            AddLevelButton("BoulderTrap");
-            AddLevelButton("PurpleFragmentRoom");
+            AddLevelButton("BoulderTutorialNew01");
+            AddLevelButton("BoulderDropChase02");
+            AddLevelButton("BoulderTrap02");
+            AddLevelButton("PurpleFragmentRoom", HueColour.HueColourValue(HueColour.HueColorNames.Purple));
             AddLevelButton("PostPurpleCorridor");
             AddLevelButton("AlternatingColourSwitch");
             AddLevelButton("FallThroughColours");
-            AddLevelButton("AlternatingColourJumps");
-            AddLevelButton("ClimbUpColours");
-            AddLevelButton("OrangeFragmentRoom");
+            AddLevelButton("AlternatingColourJumps02");
+            AddLevelButton("ClimbUpColours02");
+            AddLevelButton("OrangeFragmentRoom", HueColour.HueColourValue(HueColour.HueColorNames.Orange));
             AddLevelButton("WaterExit");
 
             GUILayout.Label("Region - Fire");
@@ -318,7 +316,7 @@ namespace LevelLoaderMod
             AddLevelButton("HueDunnit");
             AddLevelButton("SkeletonRoom");
             AddLevelButton("AlternatingBoulders");
-            AddLevelButton("PinkFragmentRoom");
+            AddLevelButton("PinkFragmentRoom", HueColour.HueColourValue(HueColour.HueColorNames.Pink));
             AddLevelButton("PostPinkCorridor");
             AddLevelButton("BoxSlideMaze");
             AddLevelButton("BrickMaze");
@@ -327,10 +325,11 @@ namespace LevelLoaderMod
             AddLevelButton("CrushOnStart");
             AddLevelButton("CrumblingRockJump");
             AddLevelButton("SlideAcrossTheGap");
-            AddLevelButton("RedFragmentRoom");
+            AddLevelButton("RedFragmentRoom", HueColour.HueColourValue(HueColour.HueColorNames.Red));
             AddLevelButton("PostRedCorridor");
 
-            GUILayout.Label("Region - Temple"); AddLevelButton("TempleIntro");
+            GUILayout.Label("Region - Temple");
+            AddLevelButton("TempleIntro");
             AddLevelButton("CrateSequence");
             AddLevelButton("BoulderPressurepads");
             AddLevelButton("PressurePadSlide");
@@ -338,7 +337,7 @@ namespace LevelLoaderMod
             AddLevelButton("ThwompTrigger");
             AddLevelButton("ThwompClimb");
             AddLevelButton("CrateThwompRetrieve");
-            AddLevelButton("BlueFragmentRoom");
+            AddLevelButton("BlueFragmentRoom", HueColour.HueColourValue(HueColour.HueColorNames.Blue));
             AddLevelButton("PostBlueCorridor");
             AddLevelButton("LongCratePressure");
             AddLevelButton("BalloonThwompJump");
@@ -346,10 +345,11 @@ namespace LevelLoaderMod
             AddLevelButton("BalloonDecoy");
             AddLevelButton("BalloonMaze");
             AddLevelButton("ThwompRunner");
-            AddLevelButton("YellowFragmentRoom");
+            AddLevelButton("YellowFragmentRoom", HueColour.HueColourValue(HueColour.HueColorNames.Yellow));
             AddLevelButton("PostYellowCorridor");
 
-            GUILayout.Label("Region - Tech"); AddLevelButton("TechHub");
+            GUILayout.Label("Region - Tech");
+            AddLevelButton("TechHub");
             AddLevelButton("TechIntro");
             AddLevelButton("LaserTutorial");
             AddLevelButton("LaserJumpSwitch");
@@ -357,13 +357,13 @@ namespace LevelLoaderMod
             AddLevelButton("LaserCrateBlock");
             AddLevelButton("LaserClimb");
             AddLevelButton("PipePush");
-            AddLevelButton("LaserPlatformMadness");
-            AddLevelButton("LaserPlatformMadness");
+            AddLevelButton("LaserPlatformMadness1");
+            AddLevelButton("LaserPlatformMadness2");
             AddLevelButton("LaserActivatedTutorial");
             AddLevelButton("LaserDoors");
             AddLevelButton("LaserBalloonMaze");
             AddLevelButton("ThwompLaserRunner");
-            AddLevelButton("LimeFragmentRoom");
+            AddLevelButton("LimeFragmentRoom", HueColour.HueColourValue(HueColour.HueColorNames.Lime));
             AddLevelButton("PostLimeCorridor");
             AddLevelButton("LeverTutorial");
             AddLevelButton("LaserHeights");
@@ -394,17 +394,17 @@ namespace LevelLoaderMod
             AddLevelButton("UniLetterCorridor");
             AddLevelButton("GooBalloonPressure");
             AddLevelButton("GooPressure");
-            AddLevelButton("Courtyard");
+            AddLevelButton("Courtyard1");
             AddLevelButton("ConveyerGoo");
             AddLevelButton("GooBalloonDip");
             AddLevelButton("TrophyRoom");
             AddLevelButton("ThwompDoubleLaser");
             AddLevelButton("UniGooStairs");
-            AddLevelButton("Courtyard");
+            AddLevelButton("Courtyard2");
             AddLevelButton("BounceGooIntro");
             AddLevelButton("GooBalloonCrates");
             AddLevelButton("MovingGoo");
-            AddLevelButton("Courtyard");
+            AddLevelButton("Courtyard3");
             AddLevelButton("ThwompGoo");
             AddLevelButton("HiddenDoorCorridor");
             AddLevelButton("SecretRoom");
@@ -548,7 +548,15 @@ namespace LevelLoaderMod
             }
         }
 
-
+        private static void AddLevelButton(string name, Color color)
+        {
+            GUIStyle style = new GUIStyle(GUI.skin.button);
+            style.normal.textColor = color;
+            if (GUILayout.Button(name, style))
+            {
+                LoadLevel(name);
+            }
+        }
 
     }
 }
