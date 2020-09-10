@@ -12,6 +12,7 @@ namespace LevelLoaderMod
     {
 
         private static Vector2 scrollPosition;
+        private static String wheelOffsetString = "0.0";
 
 
         public static void Load(UnityModManager.ModEntry modEntry)
@@ -40,7 +41,7 @@ namespace LevelLoaderMod
             style.normal.textColor = Color.white;
 
             GUILayout.Label("Level Loader Mod Enabled", style);
-            
+
             GameManager gm = GameManager.instance;
             if (gm == null)
             {
@@ -94,6 +95,18 @@ namespace LevelLoaderMod
                 LoadLevel("OldLadyHouse");
             }
 
+            GUILayout.Label("Move Color Wheel Vertically:");
+
+            GUILayout.BeginHorizontal();
+
+            wheelOffsetString = GUILayout.TextField(wheelOffsetString);
+            if (GUILayout.Button("Move"))
+            {
+                SetWheelOffset();
+            }
+
+            GUILayout.EndHorizontal();
+
             GUILayout.EndVertical();
 
             GUILayout.EndHorizontal();
@@ -101,6 +114,26 @@ namespace LevelLoaderMod
             GUILayout.EndVertical();
 
 
+        }
+
+        private static Boolean SetWheelOffset()
+        {
+            float offset;
+            if (!float.TryParse(wheelOffsetString, out offset))
+            {
+                return false;
+            }
+
+            ColourWheelTrigger instance = ColourWheelTrigger.instance;
+            if (!instance)
+            {
+                return false;
+            }
+
+            Vector3 newPos = instance.transform.position + Vector3.up * offset;
+            instance.transform.position = newPos;
+
+            return true;
         }
 
         private static void GUIColors()
