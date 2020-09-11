@@ -2,6 +2,8 @@
 HueLevelLoaderMod is a mod for [Hue](https://www.huethegame.com/) that was created to help with speedrunning the game.
 It can load any level in the game and set the game up for a NG+ speedrun.
 
+![Screenshot](/Screenshot.png)
+
 # Setup
 
 1. Download `UnityModManager.zip` from https://www.nexusmods.com/site/mods/21/ (you can use the mirror download if you don't have a login)
