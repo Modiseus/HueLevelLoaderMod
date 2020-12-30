@@ -2,12 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using UnityEngine;
 using UnityModManagerNet;
 
 namespace LevelLoaderMod
 {
+#if DEBUG
+    [EnableReloading]
+#endif
     public class Main
     {
 
@@ -20,6 +24,9 @@ namespace LevelLoaderMod
         {
             modEntry.OnFixedGUI = FixedGUI;
             modEntry.OnToggle = OnToggle;
+
+            modEntry.OnUnload = Unload;
+
         }
 
         private static bool OnToggle(UnityModManager.ModEntry modEntry, bool toggle)
@@ -27,8 +34,18 @@ namespace LevelLoaderMod
             return true;
         }
 
+        private static bool Unload(UnityModManager.ModEntry modEntry)
+        {
+            return true;
+        }
+
         private static void FixedGUI(UnityModManager.ModEntry modEntry)
         {
+            if (!modEntry.Enabled)
+            {
+                return;
+            }
+
             GUIStyle style = new GUIStyle();
             Texture2D texture = new Texture2D(1, 1);
             Color background = Color.black;
@@ -42,6 +59,11 @@ namespace LevelLoaderMod
             GUILayout.BeginVertical(style);
 
             GUILayout.Label("Level Loader Mod Enabled");
+
+#if DEBUG
+            System.Version version = Assembly.GetExecutingAssembly().GetName().Version;
+            GUILayout.Label("Version " + version.ToString());
+#endif
 
             GameManager gm = GameManager.instance;
             if (gm == null)
