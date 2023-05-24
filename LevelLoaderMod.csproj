@@ -34,8 +34,9 @@
     <Reference Include="0Harmony">
       <HintPath>Libs\0Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hue\Hue_Data\Managed\Assembly-CSharp.dll</HintPath>
+    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hue\Hue_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -59,9 +60,6 @@
     <PostBuildEvent>XCOPY /Y /R "$(TargetPath)" "$(ProjectDir)$(ProjectName)\"
 IF $(ConfigurationName) == Debug (
 XCOPY /Y /R "$(ProjectDir)$(ProjectName)" "C:\Program Files (x86)\Steam\steamapps\common\Hue\Mods\$(ProjectName)\"
-) ELSE (
-CD "$(ProjectDir)"
-ZIP -r "$(ProjectName).zip" "$(ProjectName)"
 )
 </PostBuildEvent>
   </PropertyGroup>

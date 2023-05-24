@@ -185,8 +185,12 @@ namespace LevelLoaderMod
             style.normal.textColor = textColor;
             style.onNormal.textColor = textColor;
 
-            bool unlocked = GUILayout.Toggle(slm.IsColourUnlocked(color), color.ToString(),style);
-            slm.SetColourUnlocked(color, unlocked);
+            bool unlockedBefore = slm.IsColourUnlocked(color);
+            bool unlockedAfter = GUILayout.Toggle(unlockedBefore, color.ToString(), style);
+            if (unlockedBefore != unlockedAfter)
+            {
+                slm.SetColourUnlocked(color, unlockedAfter);
+            }
         }
 
 
